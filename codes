@@ -1,0 +1,106 @@
+import random   
+
+
+import re       
+
+# game start
+print("Welcome to my Hangman game!")
+
+
+print("There are a few hardness settings shown below:")
+
+print("\teasy. easy (10 hearts)")
+
+
+print("\tmedium. mediuem (8 hearts)")
+
+print("\thard. hard (6 herrts)")
+
+print("\tveryhard. very hard (4 hearts)")
+
+
+print("\timpossible. impossible (2 hearts)")
+
+
+user_setting = input("Please choose a hardness by typing its number: ")
+
+
+
+word_list = ["car","cat","shrimp","chicken","trump"]
+
+
+if (str(user_setting) == "easy"):
+    number_of_hearts = 10
+    print("\nU have chosen %s and will get %d hearts" % ("easy", number_of_hearts))
+
+elif (str(user_setting) == "medium"):
+    number_of_hearts = 8
+    print("\nU have chosen %s and will get %d hearts" % ("medium", number_of_hearts))
+
+    
+elif (str(user_setting) == "hard"):
+    number_of_hearts = 6
+    print("\nU have chosen %s and will get %d hearts" % ("hard", number_of_hearts))
+
+elif (str(user_setting) == "veryhard"):
+    number_of_hearts = 4
+    print("\nU have chosen %s and will get %d hearts" % ("very hard", number_of_hearts))
+elif (str(user_setting) == "impossible"):
+    number_of_hearts = 2
+    print("\nU have chosen %s and will get %d hearts" % ("very hard", number_of_hearts))
+
+    
+else:
+    number_of_hearts = 10
+    print("\nYou have made an wrong selection and will get %d lives by default." % number_of_hearts)
+
+
+random_num = random.randint(0, len(word_list)-1)
+
+word_picked = word_list[random_num]
+
+
+coded_word = re.sub('[0-9a-zA-Z]', '-', word_picked)
+
+
+def guess(letter, word, coded):
+    # is the letter in the word
+    found = False
+    if letter in word:
+        found = True
+        
+        for i in range(0, len(word)):
+            if word[i] == letter:
+                coded = coded[0:i] + letter + coded[i+1:len(coded)]
+    return (found, coded)
+
+
+
+print("\ntime to guess a letter! You have %d lives remaining." % number_of_hearts)
+print(coded_word)
+
+while(number_of_hearts > 0):
+    
+    picked_letter = input("your guess: ")[:1]
+
+    letter_found, coded_word = guess(picked_letter, word_picked, coded_word)
+
+    if not letter_found:
+        number_of_hearts -= 1
+        
+        
+        if number_of_hearts == 0:
+            print("\ngame end, you lost  The word was '%s'" % word_picked)
+            break
+        else:
+            print("\nohno! That was not Found. You now have %d hearts remaining." % number_of_hearts)
+            print(coded_word)
+    else:
+        
+        if "-" not in coded_word:
+            print("\nyeahhhh! you wan with %d hearts left. The word or phrase was '%s'" % (number_of_hearts, word_picked))
+            break
+        
+        else:
+            print("\ngreat! That letter was found. You have %d hearts left." % number_of_hearts)
+            print(coded_word)
